@@ -40,7 +40,6 @@ def build_model(input_dim):
     model.add(tf.keras.layers.Dense(1, activation='sigmoid'))
     es = tf.keras.callbacks.EarlyStopping(monitor='auc', mode='max', patience=10, restore_best_weights=True)
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3), loss='binary_crossentropy', metrics=[tf.keras.metrics.AUC(curve='pr', name='auc')])
-    model.fit(X, Y, epochs=150, class_weight={0:1,1:56})
     return model
 
 if __name__ == "__main__":
@@ -57,7 +56,7 @@ if __name__ == "__main__":
     model = build_model(X.shape[1])
 
     print("Обучение модели... Подождите немного...")
-    model.fit(X, Y, epochs=20, batch_size=16, validation_split=0.1)
+    model.fit(X, Y, epochs=150, class_weight={0:1,1:56}, batch_size=16, validation_split=0.1)
 
     print("Сохранение модели в faq_model.keras...")
     model.save('faq_model.keras')
