@@ -4,7 +4,7 @@ import numpy as np
 import tensorflow as tf
 from transformers import pipeline
 
-MODEL_PATH = "faq_model"
+MODEL_PATH = "faq_model.keras"
 DATA_PATH = "faq_data.json"
 
 print("Инициализация модели RuBERT...")
