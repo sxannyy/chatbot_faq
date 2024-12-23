@@ -1,14 +1,18 @@
+# faq_chatbot.py
 import os
 import json
 import numpy as np
 import tensorflow as tf
-from transformers import pipeline
+from transformers import pipeline, AutoModel, AutoTokenizer
 
 MODEL_PATH = "faq_model.keras"
 DATA_PATH = "faq_data.json"
+MODEL_DIR = "rubert_model"
 
 print("Инициализация модели RuBERT...")
-pipe = pipeline("feature-extraction", model="DeepPavlov/rubert-base-cased")
+tokenizer = AutoTokenizer.from_pretrained(MODEL_DIR)
+model = AutoModel.from_pretrained(MODEL_DIR)
+pipe = pipeline("feature-extraction", model=model, tokenizer=tokenizer)
 
 def load_data(file_path):
     with open(file_path, "r", encoding="utf-8") as f:

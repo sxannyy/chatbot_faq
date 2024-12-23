@@ -3,11 +3,16 @@ import json
 import numpy as np
 import tensorflow as tf
 from transformers import pipeline
+from transformers import AutoModel, AutoTokenizer
 
 DATA_PATH = "faq_data.json"
 
+MODEL_DIR = "rubert_model"
+
 print("Инициализация модели RuBERT...")
-pipe = pipeline("feature-extraction", model="DeepPavlov/rubert-base-cased")
+tokenizer = AutoTokenizer.from_pretrained(MODEL_DIR)
+model = AutoModel.from_pretrained(MODEL_DIR)
+pipe = pipeline("feature-extraction", model=model, tokenizer=tokenizer)
 
 def load_data(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
@@ -38,7 +43,6 @@ def build_model(input_dim):
     model.add(tf.keras.layers.InputLayer(input_shape=(input_dim,)))
     model.add(tf.keras.layers.Dense(256, activation='selu'))
     model.add(tf.keras.layers.Dense(1, activation='sigmoid'))
-    es = tf.keras.callbacks.EarlyStopping(monitor='auc', mode='max', patience=10, restore_best_weights=True)
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3), loss='binary_crossentropy', metrics=[tf.keras.metrics.AUC(curve='pr', name='auc')])
     return model
 
